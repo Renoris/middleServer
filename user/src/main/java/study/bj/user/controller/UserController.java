@@ -40,11 +40,13 @@ public class UserController {
 
     @PostMapping("/picture")
     public @ResponseBody
-    ArrayList goFirst(@RequestParam("file")MultipartFile file, HttpServletRequest request) throws IOException {
+    ArrayList goFirst(@ModelAttribute MultipartFile file, HttpServletRequest request) throws IOException {
         //이미지 저장
-        String saveFolder="C:\\test\\";
-        fileUploadService.MultipartFileUpload(saveFolder,file);
-        
+        if(file==null){
+            return null;
+        }
+        fileUploadService.MultipartFileUpload(file);
+
 //        //헤더작성
 //        HttpHeaders headers=new HttpHeaders();
 //        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -64,13 +66,14 @@ public class UserController {
 //
 //
 //
-
         //보내줄 데이터를 담을 리스트 생성
         ArrayList<PictureData> list=new ArrayList<>();
+
+
         //데이터생성
         PictureData pc= PictureData.builder()
                 .id(1)
-                .ImageName(file.getOriginalFilename())
+                .image(file.getOriginalFilename())
                 .Logo("test")
                 .Price(13214)
                 .ProductName("진팬츠")
