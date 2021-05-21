@@ -30,4 +30,14 @@ public class Factory {
         return "F:\\Desktop\\imageSave\\";
     }
 
+    @Bean
+    public String flaskPath(){
+        return "플라스크path";
+    }
+
+    @Bean
+    public String threadPrefixName(){
+        return "clothingApplication-async-";
+    }
+
 }

@@ -1,4 +1,5 @@
-package com.study.fashionapp.data.etc;
+package com.study.fashionapp.data;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,14 +12,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity(name = "largecategory")
-public class LargeCategory {
+@Entity(name="cloth")
+public class Cloth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    private String large;
+    private String largecategory;
+    private String smallcategory;
+    private String title;
+    private String price;
+    private String link;
+    private String imagelink;
+    private String vector;
 }
