@@ -27,6 +27,5 @@ public class FileUploadServiceImpl implements FileUploadService{
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(fileOutputStream);
         bufferedOutputStream.write(file.getBytes());
         bufferedOutputStream.close();
-
     }
 }
