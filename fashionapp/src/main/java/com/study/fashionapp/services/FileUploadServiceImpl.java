@@ -17,7 +17,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     }
 
     @Override
-    public void MultipartFileUpload(MultipartFile file, String clientImagePath) throws IOException {
+    public File MultipartFileUpload(MultipartFile file, String clientImagePath) throws IOException {
         File root=new File(clientImagePath);
         if(!root.exists()){
             root.mkdirs();
@@ -26,5 +26,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(fileOutputStream);
         bufferedOutputStream.write(file.getBytes());
         bufferedOutputStream.close();
+        return new File(clientImagePath+"/"+file.getOriginalFilename());
     }
 }

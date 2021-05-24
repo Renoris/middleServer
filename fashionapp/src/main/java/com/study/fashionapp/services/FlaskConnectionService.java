@@ -11,6 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public interface FlaskConnectionService {
-    public JSONObject firstContact(MultipartFile multipartFile) throws Exception;
+    public JSONObject firstContact(File file) throws Exception;
     public JSONObject secondContact(ArrayList<TagVector> list) throws Exception;
 }

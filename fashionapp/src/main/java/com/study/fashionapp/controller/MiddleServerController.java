@@ -44,24 +44,20 @@ public class MiddleServerController {
             return result;
         }else{
             try{
-                fileUploadService.MultipartFileUpload(multipartFile, clientImagePath);
-                JSONObject jsonObject=flaskConnectionService.firstContact(multipartFile);
+                File file=fileUploadService.MultipartFileUpload(multipartFile, clientImagePath);
+                JSONObject jsonObject=flaskConnectionService.firstContact(file);
                 if(jsonObject==null){
                     System.out.println("첫번째 플라스크 통신 실패");
                     result.put("message","첫번째 플라스크 통신 실패");
                     return result;
                 }
-
-
-
-
-//                JSONArray jsonArray=(JSONArray)jsonObject.get("list");
-//                jsonObject=flaskConnectionService.secondContact(new ApiFormConverter().convertArraylistTagVector(jsonArray));
-//                if(jsonObject==null){
-//                    System.out.println("두번째 플라스크 통신 실패");
-//                    result.put("message","두번째 플라스크 통신 실패");
-//                    return result;
-//                }
+                JSONArray jsonArray=(JSONArray)jsonObject.get("list");
+                jsonObject=flaskConnectionService.secondContact(new ApiFormConverter().convertArraylistTagVector(jsonArray));
+                if(jsonObject==null){
+                    System.out.println("두번째 플라스크 통신 실패");
+                    result.put("message","두번째 플라스크 통신 실패");
+                    return result;
+                }
                 return jsonObject;
             }catch (Exception e){
                 e.printStackTrace();

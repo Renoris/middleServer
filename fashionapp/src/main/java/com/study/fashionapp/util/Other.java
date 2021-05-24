@@ -20,32 +20,33 @@ public class Other {
         this.urlStr=url;
     }
 
-    public String sendJSON(JSONObject jObject) throws IOException, IOException {
+    public String sendJSON(byte[] data) throws IOException, IOException {
         String inputLine=null;
         StringBuffer stringBuffer=new StringBuffer();
 
         URL url=new URL(urlStr); //URL객체 생성
 
         HttpURLConnection conn=(HttpURLConnection)url.openConnection(); //url주소를 가지고 Http 커넥션 객체 생성
-
-        System.out.println(conn.toString());
         conn.setDoOutput(true);
         conn.setDoInput(true);
         conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "multipart/formed-data");
+        conn.setRequestProperty("Content-Type", "multipart/form-data");
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
 
         //데이터 전송
-        BufferedWriter bWriter=new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-        bWriter.write(jObject.toString());
+//        BufferedWriter bWriter=new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+//        bWriter.write(jObject.toString());\
+
+        BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(conn.getOutputStream());
+        bufferedOutputStream.write(data);
         //전송된 결과를 읽어옴
         BufferedReader bReader=new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
         while((inputLine=bReader.readLine())!=null){
             stringBuffer.append(inputLine);
         }
-        bWriter.close();
+        bufferedOutputStream.close();
         bReader.close();
         conn.disconnect();
 

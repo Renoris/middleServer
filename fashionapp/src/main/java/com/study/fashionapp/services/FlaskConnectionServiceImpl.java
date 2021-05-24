@@ -3,7 +3,6 @@ package com.study.fashionapp.services;
 import com.study.fashionapp.data.Cloth;
 import com.study.fashionapp.data.IdVector;
 import com.study.fashionapp.data.TagVector;
-import com.study.fashionapp.util.Other;
 import com.study.fashionapp.util.PostData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,33 +32,26 @@ public class FlaskConnectionServiceImpl implements FlaskConnectionService{
         this.parser=new JSONParser();
     }
 
-    public JSONObject firstContact(MultipartFile multipartFile) throws Exception {
-        JSONObject jsonObject=new JSONObject();
-        Base64.Encoder encoder=Base64.getEncoder();
-
-        Other other=new Other(flaskFirstPath);
-        byte[] bytes=multipartFile.getBytes();
-        byte[] encordedData=encoder.encode(bytes);
-        jsonObject.put("file",encordedData);
-        String resultFirst=other.sendJSON(jsonObject);
-
-        return jsonObject;
-//        PostData postData=new PostData(flaskFirstPath);
-//        postData.addParam("file",file); //네임 알아내야함-file맞다고함
-//        String result=postData.submit();
-//        return (JSONObject) parser.parse(result);
+    public JSONObject firstContact(File file) throws Exception {
+        PostData postData=new PostData(flaskFirstPath);
+        postData.addParam("file",file); //네임 알아내야함-file맞다고함
+        String result=postData.submit();
+        return (JSONObject) parser.parse(result);
     }
 
     public JSONObject secondContact(ArrayList<TagVector> list) throws Exception{
         PostData postData=new PostData(flaskSecondPath);
-        HashMap<String, Object> file=new HashMap<>();
+        JSONObject map=new JSONObject();
         JSONObject lastObject=new JSONObject();
 
-        file.put("Item",convert(list));
-        postData.addParam(file);
+        map.put("item",convert(list));
+//      //
+//        return map;
+        //
+        postData.addParam(map);
         String result=postData.submit();
         JSONObject jsonObject=(JSONObject) parser.parse(result);
-        JSONArray array=(JSONArray)jsonObject.get("Item");
+        JSONArray array=(JSONArray)jsonObject.get("item");
         ArrayList<Integer> idList=new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             JSONObject object=(JSONObject) array.get(i);
@@ -81,7 +72,6 @@ public class FlaskConnectionServiceImpl implements FlaskConnectionService{
             map.put("original",list.get(i).getVector());
             map.put("tag",list.get(i).getTag());
             List<Cloth> clothList=clothService.findTag(list.get(i).getTag());
-
             for (int j = 0; j < clothList.size(); j++) {
                 IdVector idVector=IdVector.builder()
                         .id(String.valueOf(clothList.get(j).getId()))
