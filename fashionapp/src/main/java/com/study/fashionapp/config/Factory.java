@@ -1,6 +1,8 @@
 package com.study.fashionapp.config;
 
+import com.study.fashionapp.dao.ClothDao;
 import com.study.fashionapp.dao.etc.LargeCategoryDao;
+import com.study.fashionapp.data.Cloth;
 import lombok.Builder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +33,13 @@ public class Factory {
     }
 
     @Bean
-    public String flaskPath(){
-        return "플라스크path";
+    public String flaskFirstPath(){
+        return "http://122.202.153.202:8000/imagedata";
+    }
+
+    @Bean
+    public String flaskSecondPath(){
+        return "http://122.202.153.202:8000/post";
     }
 
     @Bean

@@ -11,7 +11,8 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClothingDataSecond {
-    private ClothingDataSecond smallcategory;
-    private ArrayList<Cloth> list;
+public class PutFlaskData {
+    String original;
+    String tag;
+    ArrayList<TagVector> Item;
 }

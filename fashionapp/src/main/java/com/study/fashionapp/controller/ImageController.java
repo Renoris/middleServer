@@ -15,8 +15,14 @@ import java.nio.file.Files;
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
-    @Autowired
+
     String clientImagePath;
+
+    @Autowired
+    public ImageController(String clientImagePath){
+        this.clientImagePath=clientImagePath;
+    }
+
 
     @GetMapping(value = "/images/{imageName}.{extension}",produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] getImage(@PathVariable(name = "imageName") String imageName, @PathVariable(name="extension") String extension) throws IOException {

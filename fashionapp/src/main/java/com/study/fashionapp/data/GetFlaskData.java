@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClothingDataSecond {
-    private ClothingDataSecond smallcategory;
-    private ArrayList<Cloth> list;
+public class GetFlaskData {
+    String tag;
+    String originalVector;
 }

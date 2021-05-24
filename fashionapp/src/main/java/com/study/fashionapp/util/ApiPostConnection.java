@@ -1,43 +1,36 @@
-package com.study.fashionapp.services;
+package com.study.fashionapp.util;
 
-import com.study.fashionapp.data.PostData;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
-public class ApiConnectionServiceImpl  {
-    @Autowired
-    String flaskPath;
+public class ApiPostConnection {
+    String path;
 
-    MultipartEntityBuilder params;
-
-    public void getPostData(PostData postData){
-        this.params=postData.getEntityBuilder();
+    public ApiPostConnection(String path){
+        this.path=path;
     }
 
-
-    public String submit() throws Exception{
+    public JSONObject submit(PostData postData) throws Exception{
+        MultipartEntityBuilder params=postData.getEntityBuilder();
+        if(params==null){
+            System.out.println("params가 null입니다");
+        }
         CloseableHttpClient http = HttpClients.createDefault();
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         try{
-            HttpPost post = new HttpPost(flaskPath);
+            HttpPost post = new HttpPost(path);
             post.setEntity(params.build());
 
             CloseableHttpResponse response = http.execute(post);
@@ -45,7 +38,7 @@ public class ApiConnectionServiceImpl  {
             try{
                 HttpEntity res = response.getEntity();
                 BufferedReader br = new BufferedReader(
-                        new InputStreamReader(res.getContent(), Charset.forName("UTF-8")));
+                        new InputStreamReader(res.getContent(), StandardCharsets.UTF_8));
 
                 String buffer = null;
                 while( (buffer=br.readLine())!=null ){
@@ -57,6 +50,7 @@ public class ApiConnectionServiceImpl  {
         }finally{
             http.close();
         }
-        JSONObject jsonObject=new JSONObject();
+        JSONParser parser=new JSONParser();
+        return (JSONObject) parser.parse(result.toString());
     }
 }

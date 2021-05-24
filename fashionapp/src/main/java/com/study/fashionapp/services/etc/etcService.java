@@ -1,4 +1,4 @@
-package com.study.fashionapp.services;
+package com.study.fashionapp.services.etc;
 
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -9,7 +9,7 @@ import com.study.fashionapp.data.PictureData;
 
 import java.nio.charset.StandardCharsets;
 
-public class etcServuce {
+public class etcService {
     public void normalRestApi(){
         //플라스크로 보내는 작업1 - uri 설정
         String baseUrl="주소";
@@ -30,7 +30,6 @@ public class etcServuce {
 
         //결과받기
         ResponseEntity<PictureData> response = template.exchange(uriComponents.toString(), HttpMethod.GET, new HttpEntity<String>(headers), PictureData.class);
-
 
     }
 }

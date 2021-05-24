@@ -1,22 +1,35 @@
-package com.study.fashionapp.data;
+package com.study.fashionapp.util;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class PostData {
-    private String flaskPath;
     private static final String DEFAULT_ENCODING = "UTF-8";
     private MultipartEntityBuilder params;
+    private String url;
 
-    public void changePath(String path){
-        flaskPath=path;
+    public PostData(String url){
+        this.url=url;
+        this.params=MultipartEntityBuilder.create();
+
     }
+
 
     public PostData addParam(Map<String, Object> param){
         return addParam(param, DEFAULT_ENCODING);
@@ -68,9 +81,7 @@ public class PostData {
     public PostData addParam(String name, File file, String encoding){
         if( file.exists() ){
             try{
-                params.addPart(
-                        name,
-                        new FileBody(file, ContentType.create("application/octet-stream"),
+                params.addPart(name, new FileBody(file, ContentType.MULTIPART_FORM_DATA,
                                 URLEncoder.encode(file.getName(), encoding)));
             }catch( Exception ex ){ ex.printStackTrace(); }
 
@@ -78,8 +89,35 @@ public class PostData {
         return this;
     }
 
-
     public MultipartEntityBuilder getEntityBuilder(){
         return this.params;
+    }
+
+    public String submit() throws Exception{
+        CloseableHttpClient http = HttpClients.createDefault();
+        StringBuilder result= new StringBuilder();
+
+        try{
+            HttpPost post = new HttpPost(url);
+            post.setEntity(params.build());
+
+            CloseableHttpResponse response = http.execute(post);
+
+            try{
+                HttpEntity res = response.getEntity();
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(res.getContent(), StandardCharsets.UTF_8));
+
+                String buffer = null;
+                while( (buffer=br.readLine())!=null ){
+                    result.append(buffer).append("\r\n");
+                }
+            }finally{
+                response.close();
+            }
+        }finally{
+            http.close();
+        }
+        return result.toString();
     }
 }
